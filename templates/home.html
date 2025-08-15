@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Sensor Prediction</title>
+    <style>
+        /* Your existing CSS (unchanged) */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-width: 600px; margin: 0 auto; }
+        h1 { color: #333; text-align: center; margin-bottom: 30px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
+        input[type="number"] { width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; font-size: 16px; }
+        input[type="number"]:focus { border-color: #667eea; outline: none; }
+        .btn { width: 100%; background: #667eea; color: white; padding: 15px; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; margin-top: 20px; }
+        .btn:hover { background: #764ba2; }
+        .result { margin-top: 30px; padding: 20px; border-radius: 10px; text-align: center; font-size: 18px; font-weight: bold; }
+        .result.good { background: #d4edda; color: #155724; border: 2px solid #c3e6cb; }
+        .result.bad { background: #f8d7da; color: #721c24; border: 2px solid #f5c6cb; }
+        .back-link { text-align: center; margin-top: 20px; }
+        .back-link a { color: #667eea; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌊 Water Sensor Prediction</h1>
+
+        {% if error_message %}
+            <div class="result bad">
+                <strong>Error:</strong> {{ error_message }}
+            </div>
+        {% endif %}
+
+        {% if results %}
+            <div class="result {% if 'Good' in results %}good{% else %}bad{% endif %}">
+                <h2>🔍 Prediction Result:</h2>
+                <p>{{ results }}</p>
+                {% if 'Good' in results %}
+                    <p>✅ The sensor is functioning correctly!</p>
+                {% else %}
+                    <p>⚠️ The sensor may need maintenance or replacement.</p>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        <form action="/predictdata" method="post">
+            <div class="form-grid">
+                {# always use a safe fallback if sensor_labels missing #}
+                {% set label_list = sensor_labels if sensor_labels is defined and sensor_labels else [
+                        'Sensor 1', 'Sensor 2', 'Sensor 3', 'Sensor 4', 'Sensor 5',
+                        'Sensor 6', 'Sensor 7', 'Sensor 8', 'Sensor 9', 'Sensor 10'
+                    ]
+                %}
+                {% for i in range(label_list|length) %}
+                    <div class="form-group">
+                        <label for="sensor_{{ i+1 }}">{{ label_list[i] }}:</label>
+                        <input type="number"
+                               step="any"
+                               name="sensor_{{ i+1 }}"
+                               id="sensor_{{ i+1 }}"
+                               placeholder="Enter {{ label_list[i] }}"
+                               required>
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn">Predict Sensor Status</button>
+        </form>
+
+        <div class="back-link">
+            <a href="/">← Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>
