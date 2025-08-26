@@ -51,18 +51,7 @@ This structured dataset enables training ML models to identify faulty sensors an
 - Cloud Deployment Ready – Procfile provided for Heroku deployment.  
 
 ---
-## 🏗️ System Architecture
 
-```mermaid
-flowchart TD
-    A[Raw Sensor Data] --> B[Calibration Module]
-    B --> C[Preprocessed Water Quality Parameters]
-    C --> D[ML Fault Detection Model]
-    D -->|Good/Faulty| E[Web Dashboard - Flask]
-    E --> F[Real-time Insights & Visualization]
-
-
----
 
 📂 Project Structure
 .
